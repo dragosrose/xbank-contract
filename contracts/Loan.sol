@@ -14,14 +14,20 @@ contract Loan {
     uint public payoff;
     uint public dueDate;
 
-    constructor (address payable _lender, address payable _borrower, address _xcoin, uint _collateral, uint _payoff, uint loanPeriod){
+    constructor (
+        address payable _lender,
+        address payable _borrower,
+        address _xcoin,
+        uint _collateral,
+        uint _payoff,
+        uint loanPeriod
+    ) {
         lender = _lender;
         borrower = _borrower;
         xcoin = _xcoin;
         collateral = _collateral;
         payoff = _payoff;
         dueDate = block.timestamp + loanPeriod;
-
     }
 
     function payLoan() public payable {

@@ -16,8 +16,14 @@ contract Lend {
 
     Loan public loan;
 
-
-    constructor (address _xbank, address _xcoin, uint _collateral, uint _loanAmount, uint _payoff, uint _loanPeriod){
+    constructor (
+        address _xbank,
+        address _xcoin,
+        uint _collateral,
+        uint _loanAmount,
+        uint _payoff,
+        uint _loanPeriod
+    ) {
         borrower = msg.sender;
         xbank = _xbank;
         xcoin = _xcoin;
@@ -25,7 +31,6 @@ contract Lend {
         loanAmount = _loanAmount;
         payoff = _payoff;
         loanPeriod = _loanPeriod;
-        
     }
 
     function lendXcoin() public payable {
@@ -43,5 +48,4 @@ contract Lend {
 
         payable(borrower).transfer(loanAmount);
     }
-
 }

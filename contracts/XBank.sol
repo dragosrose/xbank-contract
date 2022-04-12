@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./Lend.sol";
 
 contract XBank {
-
     address public owner;
 
     address public xcoin = 0x848052231C98DbB712b4cff5704a7CAedE08a0F9;
@@ -45,7 +44,7 @@ contract XBank {
 
     // How much time until stake holders can claim their rewards.
     uint public stakePayoutRate = 900; // 15 minutes
-        
+
     // Will generate lend contract for each customer when criterias are met.
     Lend lend;
 
@@ -67,8 +66,8 @@ contract XBank {
         require(IERC20(xcoin).transferFrom(msg.sender, address(this), _amount), "Staking transfer has failed.");
 
         stakingBalance[msg.sender] = stakingBalance[msg.sender] + _amount;
-        
-        if(!hasStaked[msg.sender]){
+
+        if (!hasStaked[msg.sender]) {
             stakers.push(msg.sender);
             hasStaked[msg.sender] = true;
         }
@@ -77,8 +76,6 @@ contract XBank {
         stakeDueDate[msg.sender] = block.timestamp + stakeLockDuration;
         rewardsDueDate[msg.sender] = block.timestamp + stakePayoutRate;
         isStaking[msg.sender] = true;
-
-
     }
 
     function withdraw() public {
@@ -91,7 +88,7 @@ contract XBank {
         isStaking[msg.sender] = false;
     }
 
-    function claim() public{
+    function claim() public {
         require(block.timestamp >= rewardsDueDate[msg.sender], "Reward tokens can't be claimed yet.");
 
         // Division because of the conversion rate direction (ETH => XCoin).
@@ -102,10 +99,9 @@ contract XBank {
         rewardsDueDate[msg.sender] += stakePayoutRate;
     }
 
-
-    function requestLoan(uint amount) public payable{
+    function requestLoan(uint amount) public payable {
         require(amount > 0, "Amount to lend must be greater than 0.");
-        
+
         collateral = amount * conversionRate * collateralMultiplier / 100;
         payoff = amount * conversionRate * interestRate / 100;
 
@@ -114,10 +110,9 @@ contract XBank {
 
         totalDebtSum += payoff;
     }
-            
+
     modifier onlyOwner() {
         require(msg.sender == owner);
         _;
     }
-
 }

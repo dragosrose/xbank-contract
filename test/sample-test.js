@@ -34,6 +34,4 @@ describe("Swapping to WETH then testing XBank", function () {
     const withdraw = await xbank.withdraw();
     await withdraw.wait();
   });
-
-  
 });
