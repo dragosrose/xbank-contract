@@ -25,17 +25,17 @@ contract Loan {
     }
 
     function payLoan() public payable {
-        require(block.timestamp <= dueDate, "Prea tarziu, acum iti vrem si casa si nevasta.");
-        require(msg.value == payoff, "The amount sent is too low, be careful as we might require your soul as payment.");
+        require(block.timestamp <= dueDate, "Date has already been due. The collateral has been repossessed.");
+        require(msg.value == payoff, "The payoff amount is not enough.");
 
-        require(IERC20(xcoin).transfer(borrower, collateral));
+        require(IERC20(xcoin).transfer(borrower, collateral), "Collateral transfer has failed.");
 
         selfdestruct(lender);
     }
 
     function repossess() public {
         require(block.timestamp > dueDate, "Date hasn't been yet due.");
-        require(IERC20(xcoin).transfer(lender, collateral));
+        require(IERC20(xcoin).transfer(lender, collateral), "Repossession transfer has failed");
 
         selfdestruct(lender);
     }

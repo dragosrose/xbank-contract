@@ -1,5 +1,5 @@
 const main = async () => {
-  const ContractFactory = await hre.ethers.getContractFactory('XCoin');
+  const ContractFactory = await hre.ethers.getContractFactory('XBank');
   const Contract = await ContractFactory.deploy();
   await Contract.deployed();
   console.log("Contract deployed to:", Contract.address);

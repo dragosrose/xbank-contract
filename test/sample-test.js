@@ -1,19 +1,39 @@
 const { expect } = require("chai");
+const { parseEther } = require("ethers/lib/utils");
 const { ethers } = require("hardhat");
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+describe("Swapping to WETH then testing XBank", function () {
+  // it("Swap to WETH", async function () {
+  //   const [owner] = await ethers.getSigners();
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+  //   const Swapper = await ethers.getContractFactory("Swapper");
+  //   const swapper = await Swapper.deploy();
+  //   await swapper.deployed();
 
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
+  //   const swapTx = await swapper.swap({value: parseEther("1")});
+  //   await swapTx.wait();
 
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    
+  // });
+
+  it("XBank - Stake, Withdraw, Claim, RequestLoan", async function() {
+    const XBank = await ethers.getContractFactory("XBank");
+    const xbank = await XBank.deploy();
+    await xbank.deployed();
+            
+    const stake = await xbank.stake(parseEther("1000"));
+    await stake.wait();
+
+    const requestLoan = await xbank.requestLoan(parseEther("200"));
+    await requestLoan.wait();
+
+    const claim = await xbank.claim();
+    await claim.wait();
+
+    const withdraw = await xbank.withdraw();
+    await withdraw.wait();
   });
+
+  
 });
