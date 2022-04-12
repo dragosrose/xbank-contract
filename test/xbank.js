@@ -15,12 +15,11 @@ describe("XBank", function () {
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 
     const xcoinFactory = await ethers.getContractFactory("XCoin");
+    const xcoin = await xcoinFactory.attach("0x848052231C98DbB712b4cff5704a7CAedE08a0F9");
+
     const xbankFactory = await ethers.getContractFactory("XBank");
 
-    xcoin = await xcoinFactory.deploy();
-    await xcoin.deployed();
-
-    xbank = await xbankFactory.deploy(xcoin.address);
+    xbank = await xbankFactory.deploy();
     await xbank.deployed();
 
     await xcoin.transfer(addr1.address, parseEther('1000'));
@@ -51,5 +50,9 @@ describe("XBank", function () {
 
     await xbank.withdraw(parseEther("0.01"));
     expect(formatEther(await xbank.getTotalStaked())).to.equal("0.0");
+  });
+
+  it("should know prices", async () => {
+    await xbank.liquidateCollaterals();
   });
 });

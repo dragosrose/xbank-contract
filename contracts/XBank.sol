@@ -2,12 +2,17 @@
 
 pragma solidity ^0.8.7;
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+
 
 contract XBank {
     address private owner;
 
-    IERC20 xcoin;
+    IERC20 xcoin = IERC20(0x848052231C98DbB712b4cff5704a7CAedE08a0F9);
     IERC20 weth = IERC20(0xc778417E063141139Fce010982780140Aa0cD5Ab);
 
     address[] private debters;
@@ -29,9 +34,8 @@ contract XBank {
     // How much time to pay off the loan.
     uint private loanDuration = 300; // 5 minutes
 
-    constructor(address xcoinAddr) {
+    constructor() {
         owner = msg.sender;
-        xcoin = IERC20(xcoinAddr);
     }
 
     function getStakedAmount() public view returns (uint) {
@@ -90,12 +94,16 @@ contract XBank {
 
     function liquidateCollaterals() public payable {
         // TODO
+        address pairAddr = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f).getPair(address(xcoin), address(weth));
+        console.log(pairAddr);
+        console.log(IUniswapV2Pair(pairAddr).price0CumulativeLast());
     }
 
     function requestLoan(uint amount) public payable {
         require(amount > 0, "Amount to lend must be greater than 0.");
         require(owedBalance[msg.sender] == 0, "You must pay all your debts to borrow more.");
 
+        // TODO: set collateral amount to value from uniswap + intereset
         uint collateralAmount = amount;
         debters.push(msg.sender);
 

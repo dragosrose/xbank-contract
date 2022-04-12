@@ -22,10 +22,11 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  module.exports = {
   solidity: "0.8.7",
   networks: {
-    rinkeby: {
-      url: process.env.INFURA_KEY,
-      accounts: [process.env.ACCOUNT_KEY],
-    },
+    hardhat: {
+      forking: {
+        url: "https://eth-rinkeby.alchemyapi.io/v2/WhmWfW0hpfBakhfjWDNak0uP6RktwKEE",
+      }
+    }
   },
   etherscan: {
     apiKey: process.env.CONTRACT_API,
